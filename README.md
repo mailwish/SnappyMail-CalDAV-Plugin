@@ -2,7 +2,9 @@
 
 A lightweight and modern **CalDAV integration** for [SnappyMail](https://snappymail.eu), proudly created by [**Mailbux.com**](https://mailbux.com) — the all-in-one **free business email hosting** solution.
 
-![SnappyMail CalDAV Plugin](https://mailbux.com/assets/img/mailbux-logo.png)
+![SnappyMail CalDAV Plugin](https://mailwish.com/wp-content/uploads/2025/04/logo240.png)
+<img width="1713" height="1151" alt="Screenshot 2025-11-12 1613s53" src="https://github.com/user-attachments/assets/3ff28dd5-e07f-4b68-871e-039b93804d72" />
+<img width="1712" height="1151" alt="Screenshot 2025-11-12 161339" src="https://github.com/user-attachments/assets/bb626f5d-e568-445c-bd90-b3664f9de5ab" />
 
 ---
 
