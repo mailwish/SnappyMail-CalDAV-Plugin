@@ -1,3 +1,11 @@
+## ⚠️ Note
+
+> **Important:**  
+> This plugin **must be installed together with the [SnappyMail CardDAV Plugin](https://github.com/mailwish/SnappyMail-CardDAV-Plugin)** for full synchronization support.  
+> The CalDAV plugin provides shared logic used by both calendar and contact synchronization modules.
+
+
+
 # 📅 SnappyMail CalDAV Plugin
 
 A lightweight and modern **CalDAV integration** for [SnappyMail](https://snappymail.eu), proudly created by [**Mailbux.com**](https://mailbux.com) — the all-in-one **free business email hosting** solution.
