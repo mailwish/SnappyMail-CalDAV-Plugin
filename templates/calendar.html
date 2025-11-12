@@ -1,0 +1,196 @@
+<div id="mailbux-calendar-container" class="mailbux-calendar">
+	<div class="calendar-header">
+		<h2 class="calendar-title">
+			<span data-icon="📅"></span>
+			<span>Calendar</span>
+		</h2>
+		<div class="calendar-controls">
+			<button class="btn-calendar-refresh" data-bind="click: refreshCalendar" title="Refresh Calendar">
+				<i class="icon-arrows-cw"></i>
+			</button>
+			<button class="btn-calendar-add" data-bind="click: showAddEventDialog" title="Add Event">
+				<i class="icon-plus"></i> New Event
+			</button>
+			<select class="calendar-view-selector" data-bind="value: calendarView">
+				<option value="month">Month</option>
+				<option value="week">Week</option>
+				<option value="day">Day</option>
+				<option value="list">List</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="calendar-navigation">
+		<button class="btn-nav-prev" data-bind="click: navigatePrevious">
+			<i class="icon-left-open"></i>
+		</button>
+		<span class="calendar-current-period" data-bind="text: currentPeriodLabel"></span>
+		<button class="btn-nav-next" data-bind="click: navigateNext">
+			<i class="icon-right-open"></i>
+		</button>
+		<button class="btn-nav-today" data-bind="click: navigateToday">Today</button>
+	</div>
+
+	<div class="calendar-body" data-bind="visible: !isLoading()">
+		<!-- Month View -->
+		<div class="calendar-month-view" data-bind="visible: calendarView() === 'month'">
+			<div class="calendar-month-grid">
+				<div class="calendar-weekday-header">
+					<div class="calendar-weekday">Sun</div>
+					<div class="calendar-weekday">Mon</div>
+					<div class="calendar-weekday">Tue</div>
+					<div class="calendar-weekday">Wed</div>
+					<div class="calendar-weekday">Thu</div>
+					<div class="calendar-weekday">Fri</div>
+					<div class="calendar-weekday">Sat</div>
+				</div>
+				<div class="calendar-month-days" data-bind="foreach: monthDays">
+					<div class="calendar-day" data-bind="css: { 'other-month': !isCurrentMonth, 'today': isToday, 'has-events': hasEvents }">
+						<div class="day-number" data-bind="text: dayNumber"></div>
+						<div class="day-events" data-bind="foreach: events">
+							<div class="day-event" data-bind="click: $parents[1].showEventDetails, style: { backgroundColor: color || '#3788d8' }">
+								<span class="event-time" data-bind="text: startTime"></span>
+								<span class="event-title" data-bind="text: summary"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Week View -->
+		<div class="calendar-week-view" data-bind="visible: calendarView() === 'week'">
+			<div class="calendar-week-grid">
+				<div class="calendar-time-column">
+					<div class="time-slot" data-bind="foreach: timeSlots">
+						<div class="time-label" data-bind="text: $data"></div>
+					</div>
+				</div>
+				<div class="calendar-week-days" data-bind="foreach: weekDays">
+					<div class="calendar-week-day">
+						<div class="week-day-header" data-bind="css: { 'today': isToday }">
+							<div class="week-day-name" data-bind="text: dayName"></div>
+							<div class="week-day-number" data-bind="text: dayNumber"></div>
+						</div>
+						<div class="week-day-events" data-bind="foreach: events">
+							<div class="week-event" data-bind="click: $parents[1].showEventDetails, style: { top: topPosition, height: height, backgroundColor: color || '#3788d8' }">
+								<div class="event-time" data-bind="text: startTime + ' - ' + endTime"></div>
+								<div class="event-title" data-bind="text: summary"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Day View -->
+		<div class="calendar-day-view" data-bind="visible: calendarView() === 'day'">
+			<div class="calendar-day-grid">
+				<div class="calendar-time-column">
+					<div class="time-slot" data-bind="foreach: timeSlots">
+						<div class="time-label" data-bind="text: $data"></div>
+					</div>
+				</div>
+				<div class="calendar-day-column">
+					<div class="day-events" data-bind="foreach: dayEvents">
+						<div class="day-event" data-bind="click: $parent.showEventDetails, style: { top: topPosition, height: height, backgroundColor: color || '#3788d8' }">
+							<div class="event-time" data-bind="text: startTime + ' - ' + endTime"></div>
+							<div class="event-title" data-bind="text: summary"></div>
+							<div class="event-location" data-bind="visible: location, text: location"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- List View -->
+		<div class="calendar-list-view" data-bind="visible: calendarView() === 'list'">
+			<div class="calendar-events" data-bind="foreach: sortedEvents">
+				<div class="calendar-event" data-bind="click: $parent.showEventDetails">
+					<div class="event-date-badge" data-bind="css: { 'event-past': isPast, 'event-today': isToday, 'event-future': isFuture }">
+						<div class="event-month" data-bind="text: monthLabel"></div>
+						<div class="event-day" data-bind="text: dayNumber"></div>
+						<div class="event-weekday" data-bind="text: weekdayLabel"></div>
+					</div>
+					<div class="event-details">
+						<h3 class="event-title" data-bind="text: summary"></h3>
+						<div class="event-time-range">
+							<i class="icon-clock"></i>
+							<span data-bind="text: startTime + (endTime ? ' - ' + endTime : '')"></span>
+						</div>
+						<div class="event-location" data-bind="visible: location">
+							<i class="icon-location"></i>
+							<span data-bind="text: location"></span>
+						</div>
+						<div class="event-organizer" data-bind="visible: organizer">
+							<i class="icon-user"></i>
+							<span data-bind="text: organizer"></span>
+						</div>
+						<div class="event-description" data-bind="visible: description, text: description"></div>
+					</div>
+					<div class="event-actions">
+						<button class="btn-event-edit" data-bind="click: function() { $parent.editEvent($data); }, clickBubble: false" title="Edit">
+							<i class="icon-pencil"></i>
+						</button>
+						<button class="btn-event-delete" data-bind="click: function() { $parent.deleteEvent($data); }, clickBubble: false" title="Delete">
+							<i class="icon-trash"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="no-events" data-bind="visible: sortedEvents().length === 0">
+				<i class="icon-calendar-empty" style="font-size: 48px; opacity: 0.3;"></i>
+				<p>No calendar events</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="calendar-loading" data-bind="visible: isLoading">
+		<div class="spinner"></div>
+		<p>Loading calendar events...</p>
+	</div>
+</div>
+
+<!-- Event Details Modal -->
+<div class="modal-event-details" data-bind="visible: showEventDetailsModal">
+	<div class="modal-overlay" data-bind="click: closeEventDetails"></div>
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 data-bind="text: selectedEvent() ? selectedEvent().summary : 'Event Details'"></h3>
+			<button class="modal-close" data-bind="click: closeEventDetails">×</button>
+		</div>
+		<div class="modal-body" data-bind="with: selectedEvent">
+			<div class="event-detail-row">
+				<label>Start:</label>
+				<span data-bind="text: fullStartDate"></span>
+			</div>
+			<div class="event-detail-row">
+				<label>End:</label>
+				<span data-bind="text: fullEndDate"></span>
+			</div>
+			<div class="event-detail-row" data-bind="visible: location">
+				<label>Location:</label>
+				<span data-bind="text: location"></span>
+			</div>
+			<div class="event-detail-row" data-bind="visible: organizer">
+				<label>Organizer:</label>
+				<span data-bind="text: organizer"></span>
+			</div>
+			<div class="event-detail-row" data-bind="visible: attendees && attendees.length">
+				<label>Attendees:</label>
+				<div data-bind="foreach: attendees">
+					<div class="attendee" data-bind="text: $data"></div>
+				</div>
+			</div>
+			<div class="event-detail-row" data-bind="visible: description">
+				<label>Description:</label>
+				<div class="event-description-full" data-bind="text: description"></div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" data-bind="click: function() { editEvent(selectedEvent()); }">Edit</button>
+			<button class="btn btn-danger" data-bind="click: function() { deleteEvent(selectedEvent()); }">Delete</button>
+			<button class="btn btn-default" data-bind="click: closeEventDetails">Close</button>
+		</div>
+	</div>
+</div>
